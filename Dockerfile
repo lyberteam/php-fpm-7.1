@@ -4,7 +4,7 @@ FROM php:7.1-fpm
 MAINTAINER Lyberteam <lyberteamltd@gmail.com>
 LABEL Vendor="Lyberteam"
 LABEL Description="This is a new php-fpm image(version for now 7.1)"
-LABEL Version="1.0"
+LABEL Version="1.3"
 
 ENV LYBERTEAM_TIME_ZONE Europe/Kiev
 ENV LYBERTEAM_WORKING_DIR /var/www/lyberteam
@@ -110,8 +110,7 @@ EXPOSE 9000
 ## Reconfigure timezones
 RUN  dpkg-reconfigure -f noninteractive tzdata
 RUN echo "#####################################################################################################"
-RUN echo "\
-            _                _                     _
+RUN echo "            _                _                     _
            | |              | |                   | |
            | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___
            | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|
