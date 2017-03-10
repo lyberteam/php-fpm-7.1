@@ -1,11 +1,11 @@
 ## PHP-FPM Image
 
-**The latest version is of php - php-frm:7.0.11
+**Helpful PHP-FRP image from official one
 
 >This image was done from the official php-fpm image;
 >There are also have installed a lot of useful extensions
->DateTime - UTC(-2)
->Also we configure php.ini for xdebug 
+>DateTime - Europe/Kiev
+>Also we configure xdebug.ini for xdebug but all directives are turned off by default
 
 # PHP extensions
    * iconv 
@@ -22,15 +22,6 @@
    * xdebug
    * redis
 
-# PHP Tools:
-   * PHPUnit
-   * PHP_CodeSniffer
-   * PHPLOC
-   * PHP_Depend
-   * PHPMD
-   * PHPCPD
-   * phpDox
-
 # Programs  
    * curl 
    * git 
@@ -38,3 +29,13 @@
    * mc 
    * vim
    * wget 
+   
+# ENVs:
+   * LYBERTEAM_TIME_ZONE            - set the timezone in container and php.ini (default - Europe/Kiev)
+   * LYBERTEAM_WORKING_DIR          - set the WORKDIR (default - /var/www/lyberteam )
+   
+   * HEALTHCHECK_INTERVAL_DURATION  - default value is 30s
+   * HEALTHCHECK_TIMEOUT_DURATION   - default value is 30s
+   * HEALTHCHECK_RETRIES            - default value is 3
+   
+   * CUSTOME_STOPSIGNAL             - default SIGINT

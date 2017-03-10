@@ -1,9 +1,19 @@
 # PHP7-FPM
-FROM php:7.0.12-fpm
+FROM php:7.1-fpm
 
-LABEL Vendor="lyberteam"
-LABEL Description="This is a new php-fpm image(version for now 7.0.9)"
-LABEL version="1.0"
+MAINTAINER Lyberteam <lyberteamltd@gmail.com>
+LABEL Vendor="Lyberteam"
+LABEL Description="This is a new php-fpm image(version for now 7.1)"
+LABEL Version="1.0"
+
+ENV LYBERTEAM_TIME_ZONE Europe/Kiev
+ENV LYBERTEAM_WORKING_DIR /var/www/lyberteam
+
+ENV HEALTHCHECK_INTERVAL_DURATION 30s
+ENV HEALTHCHECK_TIMEOUT_DURATION 30s
+ENV HEALTHCHECK_RETRIES 3
+
+ENV CUSTOME_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -15,8 +25,8 @@ RUN apt-get update && apt-get install -y \
         libbz2-dev \
         php-pear \
         curl \
-	nodejs \
-	npm \
+	    #nodejs \
+	    #npm \
         git \
         unzip \
         mc \
@@ -46,18 +56,18 @@ RUN apt-get update && apt-get install -y \
 RUN echo "Install xdebug by pecl"
 RUN yes | pecl install xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_enable=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.default_enable=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_connect_back=on" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && echo "xdebug.remote_connect_back=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # Change TimeZone
-RUN echo "Set Timezone to Europe/Kiev"
-RUN echo "Europe/Kiev" > /etc/timezone
+RUN echo "Set LYBERTEAM_TIME_ZONE, by default - Europe/Kiev"
+RUN echo ${LYBERTEAM_TIME_ZONE} > /etc/timezone
 
 # Install composer globally
 RUN echo "Install composer globally"
@@ -73,81 +83,30 @@ RUN pecl install channel://pecl.php.net/ev-1.0.0RC3 && echo extension=ev.so > /u
 
 RUN ln -sf /dev/stdout /var/log/access.log && ln -sf /dev/stderr /var/log/error.log
 
+## Now we copy will copy very simple php.ini file and change the timezone by ENV variable
 COPY php.ini /usr/local/etc/php/
+sed -i "/date.timezone/s/Europe\/Kiev/${LYBERTEAM_TIME_ZONE}/g" php.ini
 
 RUN /bin/bash -c 'rm -f /usr/local/etc/php-fpm.d/www.conf.default'
 ADD symfony.pool.conf /usr/local/etc/php-fpm.d/
 RUN rm -f /usr/local/etc/php-fpm.d/www.conf
 
-## Install PHP CODE_SNIFFER
-RUN echo "installing Code_sniffer phpcs"
-RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar
-RUN chmod +x phpcs.phar
-RUN mv phpcs.phar /usr/local/bin/phpcs
-RUN phpcs --version
-
-RUN echo "installing Code_sniffer phpcbf"
-RUN curl -OL https://squizlabs.github.io/PHP_CodeSniffer/phpcbf.phar
-RUN chmod +x phpcbf.phar
-RUN mv phpcbf.phar /usr/local/bin/phpcbf
-RUN phpcbf --version
-
-## Install PHPLOC
-RUN echo "installing PHPLOC"
-RUN wget https://phar.phpunit.de/phploc.phar
-RUN chmod +x phploc.phar
-RUN mv phploc.phar /usr/local/bin/phploc
-RUN phploc --version
-
-## Install PHP_DEPEND
-RUN echo "installing PHP_DEPEND"
-RUN wget http://static.pdepend.org/php/latest/pdepend.phar
-RUN chmod +x pdepend.phar
-RUN mv pdepend.phar /usr/local/bin/pdepend
-RUN pdepend --version
-
-## Install PHPUNIT
-RUN echo "installing PHPUNIT"
-RUN wget https://phar.phpunit.de/phpunit.phar
-RUN chmod +x phpunit.phar
-RUN mv phpunit.phar /usr/local/bin/phpunit
-RUN phpunit --version
-
-## Install PHPMD
-RUN echo "installing PHPMD"
-RUN wget -c http://static.phpmd.org/php/latest/phpmd.phar
-RUN chmod +x phpmd.phar
-RUN mv phpmd.phar /usr/local/bin/phpmd
-RUN phpmd --version
-
-## Install PHPCPD
-RUN echo "installing PHPCPD"
-RUN wget https://phar.phpunit.de/phpcpd.phar
-RUN chmod +x phpcpd.phar
-RUN mv phpcpd.phar /usr/local/bin/phpcpd
-RUN phpcpd --version
-
-## Install PHPDOX
-RUN echo "installing PHPDOX"
-RUN wget http://phpdox.de/releases/phpdox.phar
-RUN chmod +x phpdox.phar
-RUN mv phpdox.phar /usr/local/bin/phpdox
-RUN phpdox --version
-
-## Install wkhtmltopdf
-RUN echo "Install wkhtmltopdf and xvfb"
-RUN apt-get install -y \
-    wkhtmltopdf \
-    xvfb
-RUN echo "Create xvfb wrapper for wkhtmltopdf and create special sh script"
-RUN touch /usr/local/bin/wkhtmltopdf
-RUN chmod a+x /usr/local/bin/wkhtmltopdf
-RUN echo 'xvfb-run -a -s "-screen 0 640x480x16" wkhtmltopdf "$@"' > /usr/local/bin/wkhtmltopdf
-RUN chmod a+x /usr/local/bin/wkhtmltopdf
 
 RUN usermod -u 1000 www-data
 
 CMD ["php-fpm"]
+
+## Let's set the working dir
+WORKDIR ${LYBERTEAM_WORKING_DIR}
+
+## Now will customize the healthcheck command for icinga or zabbix service monitor
+HEALTHCHECK --interval=${HEALTHCHECK_INTERVAL_DURATION} \
+            --timeout=${HEALTHCHECK_TIMEOUT_DURATION} \
+            --retries=${HEALTHCHECK_RETRIES} \
+            CMD curl --fail http://localhost:9000 || exit 1
+
+## Set the signal to stop the container
+STOPSIGNAL ${CUSTOME_STOPSIGNAL}
 
 EXPOSE 9000
 
