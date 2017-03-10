@@ -1,6 +1,6 @@
 ## PHP-FPM Image
 
-**Helpful PHP-FRP image from official one
+**Helpful PHP-FPM image from official php:fpm
 
 >This image was done from the official php-fpm image;
 >There are also have installed a lot of useful extensions
