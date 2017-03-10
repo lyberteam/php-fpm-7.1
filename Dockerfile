@@ -85,7 +85,7 @@ RUN ln -sf /dev/stdout /var/log/access.log && ln -sf /dev/stderr /var/log/error.
 
 ## Now we copy will copy very simple php.ini file and change the timezone by ENV variable
 COPY php.ini /usr/local/etc/php/
-RUN sed -i "/date.timezone/s/Europe\/Kiev/${LYBERTEAM_TIME_ZONE}/g" php.ini
+RUN sed -i "/date.timezone/s/Europe\/Kiev/${LYBERTEAM_TIME_ZONE}/g" /usr/local/etc/php/php.ini
 
 RUN /bin/bash -c 'rm -f /usr/local/etc/php-fpm.d/www.conf.default'
 ADD symfony.pool.conf /usr/local/etc/php-fpm.d/
