@@ -9,16 +9,16 @@ LABEL Version="1.0"
 ENV LYBERTEAM_TIME_ZONE Europe/Kiev
 ENV LYBERTEAM_WORKING_DIR /var/www/lyberteam
 
-ENV HEALTHCHECK_INTERVAL_DURATION 30s
-ENV HEALTHCHECK_TIMEOUT_DURATION 30s
-ENV HEALTHCHECK_RETRIES 3
+ENV HEALTHCHECK_INTERVAL_DURATION 40s
+ENV HEALTHCHECK_TIMEOUT_DURATION 40s
+ENV HEALTHCHECK_RETRIES 5
 
 ENV CUSTOME_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
-        libpng12-dev \
+       libpng12-dev \
         libmcrypt-dev \
         libicu-dev \
         libpq-dev \
@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
         mc \
         vim \
         wget \
-#        libevent-dev \
+        libevent-dev \
         librabbitmq-dev \
     && docker-php-ext-install iconv \
     && docker-php-ext-install mcrypt \
@@ -47,10 +47,7 @@ RUN apt-get update && apt-get install -y \
         --enable-gd-native-ttf \
         --with-freetype-dir=/usr/include/freetype2 \
         --with-png-dir=/usr/include \
-        --with-jpeg-dir=/usr/include \
-    && docker-php-ext-install gd \
-    && docker-php-ext-install mbstring \
-    && docker-php-ext-enable opcache gd
+        --with-jpeg-dir=/usr/include
 
 ## Install Xdebug
 RUN echo "Install xdebug by pecl"
@@ -67,7 +64,7 @@ RUN yes | pecl install xdebug \
 
 # Change TimeZone
 RUN echo "Set LYBERTEAM_TIME_ZONE, by default - Europe/Kiev"
-RUN echo ${LYBERTEAM_TIME_ZONE} > /etc/timezone
+RUN echo $LYBERTEAM_TIME_ZONE > /etc/timezone
 
 # Install composer globally
 RUN echo "Install composer globally"
@@ -85,7 +82,7 @@ RUN ln -sf /dev/stdout /var/log/access.log && ln -sf /dev/stderr /var/log/error.
 
 ## Now we copy will copy very simple php.ini file and change the timezone by ENV variable
 COPY php.ini /usr/local/etc/php/
-RUN sed -i "/date.timezone/s/Europe\/Kiev/${LYBERTEAM_TIME_ZONE}/g" /usr/local/etc/php/php.ini
+##RUN sed -i "/date.timezone/s/Europe\/Kiev/$LYBERTEAM_TIME_ZONE/g" /usr/local/etc/php/php.ini
 
 RUN /bin/bash -c 'rm -f /usr/local/etc/php-fpm.d/www.conf.default'
 ADD symfony.pool.conf /usr/local/etc/php-fpm.d/
@@ -97,18 +94,32 @@ RUN usermod -u 1000 www-data
 CMD ["php-fpm"]
 
 ## Let's set the working dir
-WORKDIR ${LYBERTEAM_WORKING_DIR}
+WORKDIR $LYBERTEAM_WORKING_DIR
 
 ## Now will customize the healthcheck command for icinga or zabbix service monitor
-HEALTHCHECK --interval=${HEALTHCHECK_INTERVAL_DURATION} \
-            --timeout=${HEALTHCHECK_TIMEOUT_DURATION} \
-            --retries=${HEALTHCHECK_RETRIES} \
-            CMD curl --fail http://localhost:9000 || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:9000 || exit 1
+            ## --interval=$HEALTHCHECK_INTERVAL_DURATION \
+            ## --timeout=$HEALTHCHECK_TIMEOUT_DURATION \
+            ## --retries=$HEALTHCHECK_RETRIES \
 
 ## Set the signal to stop the container
-STOPSIGNAL ${CUSTOME_STOPSIGNAL}
+STOPSIGNAL $CUSTOME_STOPSIGNAL
 
 EXPOSE 9000
 
 ## Reconfigure timezones
 RUN  dpkg-reconfigure -f noninteractive tzdata
+RUN echo "#####################################################################################################"
+RUN echo "  _                _                     _
+           | |              | |                   | |
+           | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___
+           | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \
+           | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |
+           |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|
+                      __/ |
+                     |___/                                                          "
+RUN echo "#####################################################################################################"
+
+##ADD run.sh run.sh
+##RUN chmod +x run.sh
+##ENTRYPOINT ["./run.sh"]
