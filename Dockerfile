@@ -26,6 +26,17 @@ ENV HEALTHCHECK_RETRIES 5
 
 ENV CUSTOME_STOPSIGNAL SIGINT
 
+RUN echo "#############################################################################"
+RUN echo "#   _                _                     _                                #"
+RUN echo "#  | |              | |                   | |                               #"
+RUN echo "#  | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___    #"
+RUN echo "#  | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|  #"
+RUN echo "#  | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |  #"
+RUN echo "#  |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|  #"
+RUN echo "#             __/ |                                                         #"
+RUN echo "#            |___/                                                          #"
+RUN echo "#############################################################################"
+
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
