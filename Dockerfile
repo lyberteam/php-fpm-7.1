@@ -108,10 +108,16 @@ CMD ["php-fpm"]
 WORKDIR $LYBERTEAM_WORKING_DIR
 
 ## Now will customize the healthcheck command for icinga or zabbix service monitor
-HEALTHCHECK CMD curl --fail http://localhost:9000 || exit 1
-            ## --interval=$HEALTHCHECK_INTERVAL_DURATION \
-            ## --timeout=$HEALTHCHECK_TIMEOUT_DURATION \
-            ## --retries=$HEALTHCHECK_RETRIES \
+ADD test-check.sh /usr/local/bin/test-check.sh
+RUN chmod +x /usr/local/bin/test-check.sh
+
+HEALTHCHECK CMD /usr/local/bin/test-check.sh
+
+
+#HEALTHCHECK CMD curl --fail http://localhost:9000 || exit 1
+#            ## --interval=$HEALTHCHECK_INTERVAL_DURATION \
+#           ## --timeout=$HEALTHCHECK_TIMEOUT_DURATION \
+#            ## --retries=$HEALTHCHECK_RETRIES \
 
 ## Set the signal to stop the container
 STOPSIGNAL $CUSTOME_STOPSIGNAL
@@ -121,16 +127,16 @@ EXPOSE 9000
 ## Reconfigure timezones
 RUN  dpkg-reconfigure -f noninteractive tzdata
 
-######################################################################################################
-#            _                _                     _                                                #
-#           | |              | |                   | |                                               #
-#           | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                    #
-#           | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|                  #
-#           | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |                  #
-#           |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|                  #
-#                      __/ |                                                                         #
-#                     |___/                                                                          #
-######################################################################################################
+RUN echo "######################################################################################################"
+RUN echo "#            _                _                     _                                                #"
+RUN echo "#           | |              | |                   | |                                               #"
+RUN echo "#           | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                    #"
+RUN echo "#           | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|                  #"
+RUN echo "#           | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |                  #"
+RUN echo "#           |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|                  #"
+RUN echo "#                      __/ |                                                                         #"
+RUN echo "#                     |___/                                                                          #"
+RUN echo "######################################################################################################"
 
 ##ADD run.sh run.sh
 ##RUN chmod +x run.sh
