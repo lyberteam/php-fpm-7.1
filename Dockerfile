@@ -1,21 +1,15 @@
 # PHP7-FPM
 FROM php:7.1-fpm
 
-################################################################################################
-#      _                _                     _                                                #
-#     | |              | |                   | |                                               #
-#     | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                    #
-#     | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|                  #
-#     | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |                  #
-#     |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|                  #
-#                __/ |                                                                         #
-#               |___/                                                                          #
-################################################################################################
+ADD lyberteam-message.sh /var/www/lyberteam/lyberteam-message.sh
+RUN chmod +x /var/www/lyberteam/lyberteam-message.sh
+RUN /var/www/lyberteam/lyberteam-message.sh
+
 
 MAINTAINER Lyberteam <lyberteamltd@gmail.com>
 LABEL Vendor="Lyberteam"
 LABEL Description="This is a new php-fpm image(version for now 7.1)"
-LABEL Version="1.4.1"
+LABEL Version="1.4.7"
 
 ENV LYBERTEAM_TIME_ZONE Europe/Kiev
 ENV LYBERTEAM_WORKING_DIR /var/www/lyberteam
@@ -126,17 +120,6 @@ EXPOSE 9000
 
 ## Reconfigure timezones
 RUN  dpkg-reconfigure -f noninteractive tzdata
-
-################################################################################################
-#      _                _                     _                                                #
-#     | |              | |                   | |                                               #
-#     | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                    #
-#     | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _` | | '_ ` _ \|                  #
-#     | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |                  #
-#     |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|                  #
-#                __/ |                                                                         #
-#               |___/                                                                          #
-################################################################################################
 
 ##ADD run.sh run.sh
 ##RUN chmod +x run.sh
