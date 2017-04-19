@@ -12,18 +12,18 @@ LABEL Description="This is a new php-fpm image(version for now 7.1)"
 LABEL Version="1.4.7"
 
 ENV LYBERTEAM_TIME_ZONE Europe/Kiev
-ENV LYBERTEAM_WORKING_DIR /var/www/lyberteam
+ENV LYBERTEAM_VOLUME /var/www/lyberteam
 
 ENV HEALTHCHECK_INTERVAL_DURATION 40s
 ENV HEALTHCHECK_TIMEOUT_DURATION 40s
 ENV HEALTHCHECK_RETRIES 5
 
-ENV CUSTOME_STOPSIGNAL SIGINT
+ENV LYBERTEAM_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
-       libpng12-dev \
+        libpng12-dev \
         libmcrypt-dev \
         libicu-dev \
         libpq-dev \
@@ -46,8 +46,10 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install mbstring \
     && docker-php-ext-install intl \
     && docker-php-ext-install pgsql pdo pdo_pgsql \
+    && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install opcache \
+#    && docker-php-ext-install opcache \
+#    && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-configure gd \
         --enable-gd-native-ttf \
         --with-freetype-dir=/usr/include/freetype2 \
@@ -99,7 +101,7 @@ RUN usermod -u 1000 www-data
 CMD ["php-fpm"]
 
 ## Let's set the working dir
-WORKDIR $LYBERTEAM_WORKING_DIR
+VOLUME $LYBERTEAM_VOLUME
 
 ## Now will customize the healthcheck command for icinga or zabbix service monitor
 ADD test-check.sh /usr/local/bin/test-check.sh
@@ -114,12 +116,14 @@ HEALTHCHECK CMD /usr/local/bin/test-check.sh
 #            ## --retries=$HEALTHCHECK_RETRIES \
 
 ## Set the signal to stop the container
-STOPSIGNAL $CUSTOME_STOPSIGNAL
+STOPSIGNAL $LYBERTEAM_STOPSIGNAL
 
 EXPOSE 9000
 
 ## Reconfigure timezones
 RUN  dpkg-reconfigure -f noninteractive tzdata
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ##ADD run.sh run.sh
 ##RUN chmod +x run.sh

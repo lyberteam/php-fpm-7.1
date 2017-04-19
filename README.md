@@ -31,5 +31,5 @@
    * wget 
    
 # ENVs:
-   * LYBERTEAM_WORKING_DIR          - set the WORKDIR (default - /var/www/lyberteam )
-   * CUSTOME_STOPSIGNAL             - default SIGINT
+   * LYBERTEAM_VOLUME               - set the volume (default - /var/www/lyberteam )
+   * LYBERTEAM_STOPSIGNAL           - default SIGINT

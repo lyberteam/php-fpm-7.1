@@ -1,3 +1,5 @@
 test.*
 run.sh
 icinga_check_fpm_container.sh
+xdebug-2.5.3
+xdebug.so
