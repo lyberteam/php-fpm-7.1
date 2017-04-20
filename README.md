@@ -11,7 +11,7 @@
 
 # Extension by PECL
    * xdebug (2.5.0)
-   * redis  (3.1.0)
+   <!-- * redis  (3.1.0) -->
 
 # PHP extensions
    * iconv 

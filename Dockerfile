@@ -70,10 +70,10 @@ RUN yes | pecl install xdebug-2.5.0 \
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
-## Install Redis
-RUN echo "Install redis by pecl"
-RUN pecl install redis-3.1.0 \
-    && docker-php-ext-enable redis
+### Install Redis
+#RUN echo "Install redis by pecl"
+#RUN pecl install redis-3.1.0 \
+#    && docker-php-ext-enable redis
 
 # Change TimeZone
 RUN echo "Set LYBERTEAM_TIME_ZONE, by default - Europe/Kiev"
