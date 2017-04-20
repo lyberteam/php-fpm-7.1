@@ -5,19 +5,6 @@ ADD lyberteam-message.sh /var/www/lyberteam/lyberteam-message.sh
 RUN chmod +x /var/www/lyberteam/lyberteam-message.sh
 RUN /var/www/lyberteam/lyberteam-message.sh
 
-cat << EOF
-##################################################################################################
-#            _                _                     _                                            #
-#           | |              | |                   | |                                           #
-#           | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                #
-#           | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _' | |  _ ' _ |               #
-#           | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |              #
-#           |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|              #
-#                      __/ |                                                                     #
-#                     |___/                                                                      #
-##################################################################################################
-EOF
-
 
 MAINTAINER Lyberteam <lyberteamltd@gmail.com>
 LABEL Vendor="Lyberteam"
