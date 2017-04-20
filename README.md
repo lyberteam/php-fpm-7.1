@@ -6,6 +6,9 @@
 >There are also have installed a lot of useful extensions
 >DateTime - Europe/Kiev
 >Also we configure xdebug.ini for xdebug but all directives are turned off by default
+>Composer installed globally
+>PHP installed also globally
+
 
 # PHP extensions
    * iconv 
@@ -14,22 +17,25 @@
    * bz2 
    * mbstring 
    * intl 
-   * pgsql pdo 
+   * pgsql pdo
    * pdo_pgsql 
    * bcmath 
-   * opcache 
    * gd 
    * xdebug
    * redis
+   * `pdo_mysql (new)`
 
 # Programs  
-   * curl 
-   * git 
-   * unzip 
-   * mc 
+   * curl
+   * git
+   * unzip
+   * mc
    * vim
-   * wget 
+   * wget
    
 # ENVs:
    * LYBERTEAM_VOLUME               - set the volume (default - /var/www/lyberteam )
    * LYBERTEAM_STOPSIGNAL           - default SIGINT
+   
+# Removed extensions:
+   * opcache 
