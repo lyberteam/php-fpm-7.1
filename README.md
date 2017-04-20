@@ -9,6 +9,9 @@
 >Composer installed globally
 >PHP installed also globally
 
+# Extension by PECL
+   * xdebug (2.5.0)
+   * redis  (3.1.0)
 
 # PHP extensions
    * iconv 
@@ -20,9 +23,7 @@
    * pgsql pdo
    * pdo_pgsql 
    * bcmath 
-   * gd 
-   * xdebug
-   * redis
+   * gd
    * `pdo_mysql (new)`
 
 # Programs  

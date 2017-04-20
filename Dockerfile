@@ -5,6 +5,19 @@ ADD lyberteam-message.sh /var/www/lyberteam/lyberteam-message.sh
 RUN chmod +x /var/www/lyberteam/lyberteam-message.sh
 RUN /var/www/lyberteam/lyberteam-message.sh
 
+cat << EOF
+##################################################################################################
+#            _                _                     _                                            #
+#           | |              | |                   | |                                           #
+#           | |       _   _  | |__     ___   _ __  | |_    ___    __ _   _ __ ___                #
+#           | |      | | | | | '_ \   / _ \ | '__| | __|  / _ \  / _' | |  _ ' _ |               #
+#           | |____  | |_| | | |_) | |  __/ | |    | |_  |  __/ | (_| | | | | | | |              #
+#           |______|  \__, | |_.__/   \___| |_|     \__|  \___|  \__,_| |_| |_| |_|              #
+#                      __/ |                                                                     #
+#                     |___/                                                                      #
+##################################################################################################
+EOF
+
 
 MAINTAINER Lyberteam <lyberteamltd@gmail.com>
 LABEL Vendor="Lyberteam"
@@ -58,7 +71,8 @@ RUN apt-get update && apt-get install -y \
 
 ## Install Xdebug
 RUN echo "Install xdebug by pecl"
-RUN yes | pecl install xdebug \
+RUN yes | pecl install xdebug-2.5.0 \
+    && docker-php-ext-enable xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
@@ -68,6 +82,11 @@ RUN yes | pecl install xdebug \
 
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+## Install Redis
+RUN echo "Install redis by pecl"
+RUN pecl install redis-3.1.0 \
+    && docker-php-ext-enable redis
 
 # Change TimeZone
 RUN echo "Set LYBERTEAM_TIME_ZONE, by default - Europe/Kiev"
