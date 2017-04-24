@@ -9,7 +9,7 @@ RUN /var/www/lyberteam/lyberteam-message.sh
 MAINTAINER Lyberteam <lyberteamltd@gmail.com>
 LABEL Vendor="Lyberteam"
 LABEL Description="This is a new php-fpm image(version for now 7.1)"
-LABEL Version="1.4.7"
+LABEL Version="1.4.9"
 
 ENV LYBERTEAM_TIME_ZONE Europe/Kiev
 ENV LYBERTEAM_VOLUME /var/www/lyberteam
@@ -26,9 +26,6 @@ RUN apt-get update && apt-get install -y \
         libpq-dev \
         libbz2-dev \
         php-pear \
-#        curl \
-	    #nodejs \
-	    #npm \
         git \
         unzip \
         mc \
@@ -45,14 +42,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pgsql pdo pdo_pgsql \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install bcmath \
-    && docker-php-ext-install opcache
-#    && docker-php-ext-install -j$(nproc) gd \
-#    && docker-php-ext-install gd
-#    && docker-php-ext-configure gd \
-#        --enable-gd-native-ttf \
-#        --with-freetype-dir=/usr/include/freetype2 \
-#        --with-png-dir=/usr/include \
-#        --with-jpeg-dir=/usr/include
+    && docker-php-ext-install opcache \
+    && docker-php-ext-enable opcache
 
 # Install GD
 RUN apt-get install -y \
@@ -63,20 +54,22 @@ RUN docker-php-ext-configure gd \
         --enable-gd-native-ttf \
         --with-freetype-dir=/usr/include/freetype2 \
         --with-png-dir=/usr/include \
-        --with-jpeg-dir=/usr/include
-RUN docker-php-ext-install gd
+        --with-jpeg-dir=/usr/include \
+    && docker-php-ext-install gd \
+    && docker-php-ext-enable gd
 
 
 ## Install Xdebug
 RUN echo "Install xdebug by pecl"
 RUN yes | pecl install xdebug-2.5.0 \
-    && docker-php-ext-enable xdebug
-#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-#    && echo "xdebug.remote_connect_back=on" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && docker-php-ext-enable xdebug \
+#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_enable=on\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_autostart=on\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+#    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_handler=dbgp\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_port=9001\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && echo "xdebug.remote_connect_back=1\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
