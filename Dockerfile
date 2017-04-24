@@ -44,8 +44,8 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl \
     && docker-php-ext-install pgsql pdo pdo_pgsql \
     && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install bcmath
-#    && docker-php-ext-install opcache
+    && docker-php-ext-install bcmath \
+    && docker-php-ext-install opcache
 #    && docker-php-ext-install -j$(nproc) gd \
 #    && docker-php-ext-install gd
 #    && docker-php-ext-configure gd \
@@ -70,13 +70,13 @@ RUN docker-php-ext-install gd
 ## Install Xdebug
 RUN echo "Install xdebug by pecl"
 RUN yes | pecl install xdebug-2.5.0 \
-    && docker-php-ext-enable xdebug \
-    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_connect_back=on" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && docker-php-ext-enable xdebug
+#    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
+#    && echo "xdebug.remote_connect_back=on" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
