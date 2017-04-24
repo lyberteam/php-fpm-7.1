@@ -21,15 +21,12 @@ ENV HEALTHCHECK_RETRIES 5
 ENV LYBERTEAM_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libpng12-dev \
         libmcrypt-dev \
         libicu-dev \
         libpq-dev \
         libbz2-dev \
         php-pear \
-        curl \
+#        curl \
 	    #nodejs \
 	    #npm \
         git \
@@ -48,7 +45,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pgsql pdo pdo_pgsql \
     && docker-php-ext-install pdo_mysql \
     && docker-php-ext-install bcmath
-#    && docker-php-ext-install opcache \
+#    && docker-php-ext-install opcache
 #    && docker-php-ext-install -j$(nproc) gd \
 #    && docker-php-ext-install gd
 #    && docker-php-ext-configure gd \
@@ -58,7 +55,10 @@ RUN apt-get update && apt-get install -y \
 #        --with-jpeg-dir=/usr/include
 
 # Install GD
-#RUN apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng12-dev
+RUN apt-get install -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng12-dev
 RUN docker-php-ext-configure gd \
         --enable-gd-native-ttf \
         --with-freetype-dir=/usr/include/freetype2 \
@@ -72,11 +72,11 @@ RUN echo "Install xdebug by pecl"
 RUN yes | pecl install xdebug-2.5.0 \
     && docker-php-ext-enable xdebug \
     && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_enable=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.default_enable=off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_autostart=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.default_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_port=9001" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_connect_back=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && echo "xdebug.remote_connect_back=on" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 ## You can comment the next line if you don't want change xdebug configuration and build your own image
 #COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
