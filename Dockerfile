@@ -21,6 +21,7 @@ ENV HEALTHCHECK_RETRIES 5
 ENV LYBERTEAM_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
+        libmcrypt-dev \
         libicu-dev \
         libpq-dev \
         libbz2-dev \
@@ -49,7 +50,6 @@ RUN apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng12-dev \
-        libmcrypt-dev \
      && docker-php-ext-configure gd \
           --enable-gd-native-ttf \
           --with-freetype-dir=/usr/include/freetype2 \
