@@ -50,8 +50,7 @@ RUN apt-get install -y \
         libjpeg62-turbo-dev \
         libpng12-dev \
         libmcrypt-dev \
-     &&
-        docker-php-ext-configure gd \
+     && docker-php-ext-configure gd \
           --enable-gd-native-ttf \
           --with-freetype-dir=/usr/include/freetype2 \
           --with-png-dir=/usr/include \
