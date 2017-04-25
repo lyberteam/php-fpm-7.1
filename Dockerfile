@@ -21,7 +21,6 @@ ENV HEALTHCHECK_RETRIES 5
 ENV LYBERTEAM_STOPSIGNAL SIGINT
 
 RUN apt-get update && apt-get install -y \
-        libmcrypt-dev \
         libicu-dev \
         libpq-dev \
         libbz2-dev \
@@ -49,12 +48,14 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
-        libpng12-dev
-RUN docker-php-ext-configure gd \
-        --enable-gd-native-ttf \
-        --with-freetype-dir=/usr/include/freetype2 \
-        --with-png-dir=/usr/include \
-        --with-jpeg-dir=/usr/include \
+        libpng12-dev \
+        libmcrypt-dev \
+     &&
+        docker-php-ext-configure gd \
+          --enable-gd-native-ttf \
+          --with-freetype-dir=/usr/include/freetype2 \
+          --with-png-dir=/usr/include \
+          --with-jpeg-dir=/usr/include \
     && docker-php-ext-install gd \
     && docker-php-ext-enable gd
 
@@ -111,7 +112,7 @@ RUN usermod -u 1000 www-data
 CMD ["php-fpm"]
 
 ## Let's set the working dir
-VOLUME $LYBERTEAM_VOLUME
+WORKDIR $LYBERTEAM_VOLUME
 
 ## Now will customize the healthcheck command for icinga or zabbix service monitor
 ADD test-check.sh /usr/local/bin/test-check.sh
